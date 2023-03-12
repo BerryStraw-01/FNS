@@ -11,7 +11,7 @@
 ## サーバー
 
 * lolipop
-* PHP
+* PHP 8.1
 
 ## development
 
@@ -21,5 +21,11 @@
 * install composer
 * install symfony
 * run install task
+* copy `.env` to `.env.local`
+* write database setting to `.env.local`
+```.env.local
+DATABASE_URL="mysql://fns:password@127.0.0.1:3306/fns?serverVersion=15&charset=utf8"
+```
+* run migration task
 * run server task
 * access [http://127.0.0.1:8000](http://127.0.0.1:8000)

@@ -1,0 +1,8 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="install" type="ComposerRunConfigurationType" factoryName="Composer Script">
+    <option name="commandLineParameters" value="install" />
+    <option name="pathToComposerJson" value="F:\project\dev\FNS\composer.json" />
+    <option name="script" value="auto-scripts" />
+    <method v="2" />
+  </configuration>
+</component>
