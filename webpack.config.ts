@@ -5,7 +5,7 @@ import WebpackRemoveEmptyScriptsPlugin from "webpack-remove-empty-scripts";
 module.exports = {
     // 入力ファイル設定
     entry: {
-        bundle: './src-ts/index.ts',
+        index: './src-ts/index.ts',
         style: './src-css/style.scss',
     },
     devtool: 'source-map',
