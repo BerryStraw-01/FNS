@@ -2,26 +2,21 @@
 
 namespace App\Form\Type;
 
-use App\Entity\UserAuth;
+use App\Entity\FormPhase;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
-use Symfony\Component\Form\Extension\Core\Type\PasswordType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class UserPasswordType extends AbstractType {
-
+class FormPhaseType extends AbstractType {
   public function buildForm(FormBuilderInterface $builder, array $options) {
     $builder
       ->add("uuid", HiddenType::class)
-      ->add("email", TextType::class)
-      ->add("password", PasswordType::class)
-      ->add("create", SubmitType::class);
+      ->add("phase", NumberType::class);
   }
 
   public function configureOptions(OptionsResolver $resolver) {
-    $resolver->setDefaults(['data_class' => UserAuth::class,]);
+    $resolver->setDefaults(['data_class' => FormPhase::class,]);
   }
 }

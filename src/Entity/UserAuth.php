@@ -6,6 +6,7 @@ use App\Repository\UserAuthRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints\DateTime;
 use Symfony\Component\Validator\Constraints\Email;
+use Symfony\Component\Validator\Constraints\Unique;
 
 #[ORM\Entity(repositoryClass: UserAuthRepository::class)]
 class UserAuth {
@@ -14,6 +15,7 @@ class UserAuth {
   #[ORM\Column]
   private ?int $id = null;
   #[ORM\Column]
+  #[Unique]
   private string $uuid;
   #[ORM\Column]
   private DateTime $createAt;

@@ -2,31 +2,31 @@
 
 namespace App\Controller;
 
-use App\Entity\UserAuth;
-use App\Form\Type\UserPasswordType;
+use App\Entity\FormPhase;
+use App\Form\Type\FormPhaseType;
 use App\Repository\UserAuthRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\BrowserKit\Request;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class UserCreateController extends AbstractController {
   #[Route('/create-user', name: 'app_create_user')]
   public function index(Request $request, UserAuthRepository $userAuthRepository): Response {
-    $formData = new UserAuth();
+    $phaseForm = $this->createForm(FormPhaseType::class);
+    $phaseForm->handleRequest($request);
+    /** @var FormPhase $phaseData */
+    $phaseData = $phaseForm->getData();
 
-    $form = $this->createForm(UserPasswordType::class, $formData);
-    $form->handleRequest($request);
-
-    if ($form->isSubmitted() && $form->isValid()) {
-      $userAuth = $userAuthRepository->findOneBy(["uuid" => $formData->getUuid()]);
-      $userAuth->setEmail($formData->getEmail());
-      $userAuth->setPassword($formData->getPassword());
-      $userAuthRepository->save($userAuth);
-
+    switch ($phaseData->getPhase()) {
+      case 1:
+      break;
+      case 2:
+      break;
     }
 
-
-    return $this->render('create-user/index.html.twig', ['controller_name' => 'CreateUserController',]);
+    return $this->render('create-user/index.html.twig', [
+      "phaseForm" => $phaseForm,
+    ]);
   }
 }
