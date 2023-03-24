@@ -39,13 +39,24 @@ symfonyをインストール
   
 node18をインストール
 
-* run install task x 2
+* run install task x 2 or run command
   
-installタスクを2種類実行する
+installタスクを2種類実行する、またはコマンドを実行する
 
-* run watch task
+```sh
+composer install
+```
+```sh
+npm install
+```
+
+* run watch task or run command
   
-watchタスクを実行する
+watchタスクを実行する、またはコマンドを実行する
+```sh
+npm run watch
+```
+
 
 * copy `.env` to `.env.local`
   
@@ -58,13 +69,20 @@ databaseの設定を`.env.local`に書き換える
 ```.env.local
 DATABASE_URL="mysql://fns:password@127.0.0.1:3306/fns?serverVersion=15&charset=utf8"
 ```
-* run migration task
+* run migration task or run command
 
-migrationタスクを実行する
+migrationタスクを実行する、またはコマンドを実行する
+```sh
+php bin/console make:migration
+php bin/console doctrine:migrations:migrate
+```
 
-* run server task
+* run server task or run command
 
-serverタスクを実行する
+serverタスクを実行する、またはコマンドを実行する
+```sh
+symfony server:start
+```
 
 * access http://127.0.0.1:8000
 
