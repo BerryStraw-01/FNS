@@ -18,6 +18,7 @@
     </JetCodeStyleSettings>
     <PHPCodeStyleSettings>
       <option name="ALIGN_KEY_VALUE_PAIRS" value="true" />
+      <option name="MULTILINE_CHAINED_CALLS_SEMICOLON_ON_NEW_LINE" value="true" />
     </PHPCodeStyleSettings>
     <yaml>
       <option name="SEQUENCE_ON_NEW_LINE" value="true" />

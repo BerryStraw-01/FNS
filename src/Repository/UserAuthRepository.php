@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\UserAuth;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Validator\Constraints\Uuid;
 
 /**
  * @extends ServiceEntityRepository<UserRegistrar>

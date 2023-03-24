@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints\DateTime;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\Unique;
+use Symfony\Component\Validator\Constraints\Uuid;
 
 #[ORM\Entity(repositoryClass: UserAuthRepository::class)]
 class UserAuth {
@@ -16,7 +17,7 @@ class UserAuth {
   private ?int $id = null;
   #[ORM\Column]
   #[Unique]
-  private string $uuid;
+  private Uuid $uuid;
   #[ORM\Column]
   private DateTime $createAt;
   #[ORM\Column]
@@ -30,9 +31,14 @@ class UserAuth {
   #[ORM\Column(length: 8)]
   private ?string $token = null;
 
-  public function __construct() {
-    $this->createAt = new DateTime("now");
-    $this->uuid = uniqid();
+  protected function __construct() {
+  }
+
+  public static function create(): UserAuth {
+    $userAuth = new UserAuth();
+    $userAuth->createAt = new DateTime("now");
+    $userAuth->uuid = new Uuid();
+    return $userAuth;
   }
 
   /**
@@ -50,9 +56,9 @@ class UserAuth {
   }
 
   /**
-   * @return string
+   * @return Uuid
    */
-  public function getUuid(): string {
+  public function getUuid(): Uuid {
     return $this->uuid;
   }
 

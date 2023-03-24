@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "target": "ES6",
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "types":["node"],
+    "lib": [
+      "ES2021",
+      "dom"
+    ],
+    "sourceMap": true,
+    "inlineSources": true,
+    "outDir": "./dist/",
+    "noImplicitAny": true,
+    "jsx": "react",
+    "allowSyntheticDefaultImports": true,
+    "moduleResolution": "node",
+  }
+}

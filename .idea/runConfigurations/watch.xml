@@ -1,8 +1,12 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="install" type="js.build_tools.npm" nameIsGenerated="true">
+  <configuration default="false" name="watch" type="js.build_tools.npm">
     <package-json value="$PROJECT_DIR$/package.json" />
-    <command value="install" />
+    <command value="run" />
+    <scripts>
+      <script value="watch" />
+    </scripts>
     <node-interpreter value="$PROJECT_DIR$/../kweb/node/node" />
+    <package-manager value="npm" />
     <envs />
     <method v="2" />
   </configuration>
