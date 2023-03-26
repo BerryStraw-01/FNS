@@ -2,7 +2,7 @@ FROM ubuntu
 WORKDIR /temp
 RUN apt update \
     && apt install -y curl \
-    && curl -1sLf 'https://dl.cloudsmith.io/public/symfony/stable/setup.deb.sh' | sudo -E bash \
+    && curl -sS https://get.symfony.com/cli/installer | bash \
     && apt update \
     && apt install -y git php8.1 composer symfony-cli npm
 
