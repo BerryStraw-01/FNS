@@ -12,6 +12,8 @@ services:
       - "sh"
       - "/data/run.sh"
     working_dir: /data
+    ports:
+      - 8000:8000
     logging:
       driver: json-file
       options:
