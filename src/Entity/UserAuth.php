@@ -21,6 +21,8 @@ class UserAuth implements PasswordAuthenticatedUserInterface {
   #[ORM\Column(nullable: false)]
   private bool $expected = false;
   #[ORM\Column(nullable: false)]
+  private bool $authed = false;
+  #[ORM\Column(nullable: false)]
   private DateTimeImmutable $createAt;
   #[ORM\Column(nullable: true)]
   private ?string $password = null;
@@ -41,6 +43,20 @@ class UserAuth implements PasswordAuthenticatedUserInterface {
     $userAuth->createAt = new DateTimeImmutable("now");
     $userAuth->sessionId = $sessionId;
     return $userAuth;
+  }
+
+  /**
+   * @return bool
+   */
+  public function isAuthed(): bool {
+    return $this->authed;
+  }
+
+  /**
+   * @param bool $authed
+   */
+  public function setAuthed(bool $authed): void {
+    $this->authed = $authed;
   }
 
   /**
