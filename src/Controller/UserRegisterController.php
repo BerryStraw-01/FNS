@@ -81,7 +81,7 @@ class UserRegisterController extends AbstractController {
     if ((new \DateTimeImmutable())->sub(new \DateInterval("PT1H")) > $userAuth->getCreateAt()) {
       $userAuth->setExpected(true);
       $this->userAuthRepository->save($userAuth);
-      return $this->newForm($request, $session, ["登録開始から30分以上経過しました。再度最初からやり直してください。"]);
+      return $this->newForm($request, $session, ["登録開始から1時間以上経過しました。再度最初からやり直してください。"]);
     }
 
     if ($userAuth->getEmail() == null || $userAuth->getPassword() == null)
