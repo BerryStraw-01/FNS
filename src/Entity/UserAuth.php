@@ -3,42 +3,58 @@
 namespace App\Entity;
 
 use App\Repository\UserAuthRepository;
+use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints\DateTime;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\Unique;
-use Symfony\Component\Validator\Constraints\Uuid;
 
 #[ORM\Entity(repositoryClass: UserAuthRepository::class)]
-class UserAuth {
+class UserAuth implements PasswordAuthenticatedUserInterface {
   #[ORM\Id]
   #[ORM\GeneratedValue]
   #[ORM\Column]
   private ?int $id = null;
-  #[ORM\Column]
+  #[ORM\Column(length: 30, nullable: false)]
   #[Unique]
-  private Uuid $uuid;
-  #[ORM\Column]
-  private DateTime $createAt;
-  #[ORM\Column]
+  private string $sessionId;
+  #[ORM\Column(nullable: false)]
+  private bool $expected = false;
+  #[ORM\Column(nullable: false)]
+  private DateTimeImmutable $createAt;
+  #[ORM\Column(nullable: true)]
   private ?string $password = null;
-  #[ORM\Column]
+  #[ORM\Column(nullable: true)]
   #[Email]
   private ?string $email = null;
   /**
    * @var string|null hashed verify token
    */
-  #[ORM\Column(length: 8)]
-  private ?string $token = null;
+  #[ORM\Column(length: 9, nullable: true)]
+  private ?string $code = null;
 
   protected function __construct() {
   }
 
-  public static function create(): UserAuth {
+  public static function create(string $sessionId): UserAuth {
     $userAuth = new UserAuth();
-    $userAuth->createAt = new DateTime("now");
-    $userAuth->uuid = new Uuid();
+    $userAuth->createAt = new DateTimeImmutable("now");
+    $userAuth->sessionId = $sessionId;
     return $userAuth;
+  }
+
+  /**
+   * @return bool
+   */
+  public function isExpected(): bool {
+    return $this->expected;
+  }
+
+  /**
+   * @param bool $expected
+   */
+  public function setExpected(bool $expected): void {
+    $this->expected = $expected;
   }
 
   /**
@@ -56,24 +72,24 @@ class UserAuth {
   }
 
   /**
-   * @return Uuid
+   * @return string
    */
-  public function getUuid(): Uuid {
-    return $this->uuid;
+  public function getSessionId(): string {
+    return $this->sessionId;
   }
 
   /**
    * @return string|null
    */
-  public function getToken(): ?string {
-    return $this->token;
+  public function getCode(): ?string {
+    return $this->code;
   }
 
   /**
-   * @param string|null $token
+   * @param string|null $code
    */
-  public function setToken(?string $token): void {
-    $this->token = $token;
+  public function setCode(?string $code): void {
+    $this->code = $code;
   }
 
   /**
@@ -94,7 +110,7 @@ class UserAuth {
     return $this->id;
   }
 
-  public function getCreateAt(): DateTime {
+  public function getCreateAt(): DateTimeImmutable {
     return $this->createAt;
   }
 }

@@ -2,7 +2,7 @@
 
 namespace App\FormEntity\Auth;
 
-use Symfony\Component\Validator\Constraints\Uuid;
+use Symfony\Component\Uid\Uuid;
 
 class FormUuid {
   private Uuid $uuid;

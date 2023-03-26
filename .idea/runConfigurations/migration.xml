@@ -1,7 +1,0 @@
-<component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="migration" type="CompoundRunConfigurationType">
-    <toRun name="doctrine:migrations:migrate" type="PhpLocalRunConfigurationType" />
-    <toRun name="make:migration" type="PhpLocalRunConfigurationType" />
-    <method v="2" />
-  </configuration>
-</component>

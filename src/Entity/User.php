@@ -14,17 +14,31 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
   #[ORM\Column]
   private ?int $id = null;
   #[ORM\Column(length: 180, unique: true)]
-  private ?string $email = null;
+  private string $email;
   #[ORM\Column]
   private array $roles = [];
 
   /**
-   * @var string|null The hashed password
+   * @var string The hashed password
    */
   #[ORM\Column]
-  private ?string $password = null;
+  private string $password;
   #[ORM\Column]
   private ?string $username = null;
+
+  protected function __construct() {
+  }
+
+  public static function create(string $email, string $password): User {
+    $user = new User();
+    $user->email = $email;
+    $user->password = $password;
+    return $user;
+  }
+
+  public static function fromUserAuth(UserAuth $userAuth): User {
+    return self::create($userAuth->getEmail(), $userAuth->getPassword());
+  }
 
 
   public function getId(): ?int {
