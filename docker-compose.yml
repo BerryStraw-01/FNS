@@ -9,6 +9,7 @@ services:
     environment:
       SYMFONY_PROJECT_NAME: fns
       SYMFONY_PROJECT_SKELETON: symfony/skeleton
+      ALLOW_EMPTY_PASSWORD: yes
     working_dir: /data
     ports:
       - 8000:8000

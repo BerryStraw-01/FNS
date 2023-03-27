@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -26,7 +28,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
   #[ORM\Column]
   private ?string $username = null;
 
-  protected function __construct() {
+  #[ORM\ManyToMany(targetEntity: Communitiy::class, mappedBy: 'users')]
+  private Collection $communities;
+
+  protected function __construct()
+  {
+      $this->communities = new ArrayCollection();
   }
 
   public static function create(string $email, string $password): User {
@@ -118,5 +125,32 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
   public function eraseCredentials() {
     // If you store any temporary, sensitive data on the user, clear it here
     // $this->plainPassword = null;
+  }
+
+  /**
+   * @return Collection<int, Communitiy>
+   */
+  public function getCommunities(): Collection
+  {
+      return $this->communities;
+  }
+
+  public function addCommunity(Communitiy $community): self
+  {
+      if (!$this->communities->contains($community)) {
+          $this->communities->add($community);
+          $community->addUser($this);
+      }
+
+      return $this;
+  }
+
+  public function removeCommunity(Communitiy $community): self
+  {
+      if ($this->communities->removeElement($community)) {
+          $community->removeUser($this);
+      }
+
+      return $this;
   }
 }
