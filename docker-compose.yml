@@ -8,10 +8,6 @@ services:
         target: /app
     environment:
       SYMFONY_PROJECT_NAME: fns
-    command:
-      - "sh"
-      - "-c"
-      - "symfony server:start"
     working_dir: /data
     ports:
       - 8000:8000
