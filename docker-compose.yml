@@ -55,9 +55,7 @@ services:
       - "sh"
       - "-c"
       - |-
-        ls /etc
-        ls /php
-        cat /etc/php/php.ini
+        which php
         composer update
         php bin/console doctrine:migrations:generate -n
         php bin/console doctrine:migrations:migrate -n
