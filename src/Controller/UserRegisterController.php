@@ -64,8 +64,8 @@ class UserRegisterController extends AbstractController {
 
   #[Route('/register', name: 'app_register')]
   public function index(Request $request): Response {
-    $session = $this->requestStack->getSession();
-    dump("index", $session->getId());
+    $session = $request->getSession();
+    if (!$session->isStarted()) $session->start();
 
     $userAuth = $this->userAuthRepository->findOneBy(["sessionId" => $session->getId(), "expected" => false]);
 
@@ -90,10 +90,8 @@ class UserRegisterController extends AbstractController {
   }
 
   private function newForm(Request $request, Session $session, array $errors = []): Response {
-    dump("new form");
     $userAuth = UserAuth::create($session->getId());
-    if ($userAuth->getId() != null && $userAuth->getId() != "")
-      $this->userAuthRepository->save($userAuth);
+    $this->userAuthRepository->save($userAuth);
 
     return $this->userPasswordForm($request, $userAuth, $session, $errors);
   }
@@ -104,7 +102,6 @@ class UserRegisterController extends AbstractController {
     Session  $session,
     array    $errors = []
   ): Response {
-    dump("user password");
     $form = $this->createFormBuilder()
       ->add("email", EmailType::class)
       ->add("password", PasswordType::class)
@@ -135,7 +132,6 @@ class UserRegisterController extends AbstractController {
   }
 
   private function emailCodeForm(Request $request, UserAuth $userAuth, Session $session): Response {
-    dump("email code");
     $form = $this->createForm(EmailCodeType::class);
     $form->handleRequest($request);
 
@@ -159,9 +155,8 @@ class UserRegisterController extends AbstractController {
       $userAuth->setCode(bin2hex(random_bytes(8 / 2)));
     } catch (\Exception $e) {
       error_log($e);
-      return $this->userPasswordForm($request, $userAuth, $uuidForm, ["認証コードの生成に失敗しました。しばらくしてからもう一度お試しください。"]);
+      return $this->userPasswordForm($request, $userAuth, $session, ["認証コードの生成に失敗しました。しばらくしてからもう一度お試しください。"]);
     }
-    dump($userAuth);
     $this->userAuthRepository->save($userAuth);
 
     $email = (new Email())
