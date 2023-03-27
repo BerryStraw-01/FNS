@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="doctrine:migrations:migrate" type="PhpLocalRunConfigurationType" factoryName="PHP Console" path="$PROJECT_DIR$/bin/console" scriptParameters="doctrine:migrations:migrate">
+  <configuration default="false" name="doctrine:migrations:migrate" type="PhpLocalRunConfigurationType" factoryName="PHP Console" path="$PROJECT_DIR$/bin/console" scriptParameters="doctrine:migrations:migrate -n">
     <method v="2">
       <option name="RunConfigurationTask" enabled="true" run_configuration_name="make:migration" run_configuration_type="PhpLocalRunConfigurationType" />
     </method>
