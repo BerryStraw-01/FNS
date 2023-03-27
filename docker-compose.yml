@@ -54,7 +54,13 @@ services:
     command:
       - "sh"
       - "-c"
-      - "composer update && php bin/console doctrine:migrations:generate -n && php bin/console doctrine:migrations:migrate -n"
+      - |-
+        ls /etc
+        ls /php
+        cat /etc/php/php.ini
+        composer update
+        php bin/console doctrine:migrations:generate -n
+        php bin/console doctrine:migrations:migrate -n
     logging:
       driver: json-file
       options:
