@@ -10,7 +10,7 @@ services:
       SYMFONY_PROJECT_NAME: fns
       SYMFONY_PROJECT_SKELETON: symfony/skeleton
       ALLOW_EMPTY_PASSWORD: yes
-    working_dir: /data
+    working_dir: /app
     ports:
       - 8000:8000
     logging:

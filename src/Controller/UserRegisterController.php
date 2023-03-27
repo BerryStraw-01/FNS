@@ -66,11 +66,6 @@ class UserRegisterController extends AbstractController {
   public function index(Request $request): Response {
     $session = $this->requestStack->getSession();
     dump("index", $session->getId());
-    if (!$session->isStarted()) {
-      $session->start();
-      return $this->newForm($request, $session);
-    }
-
 
     $userAuth = $this->userAuthRepository->findOneBy(["sessionId" => $session->getId(), "expected" => false]);
 
@@ -94,19 +89,20 @@ class UserRegisterController extends AbstractController {
     return $this->createUser($request, $userAuth);
   }
 
-  private function newForm(Request $request, Session $session, array $errors = null): Response {
+  private function newForm(Request $request, Session $session, array $errors = []): Response {
     dump("new form");
     $userAuth = UserAuth::create($session->getId());
-    $this->userAuthRepository->save($userAuth);
+    if ($userAuth->getId() != null && $userAuth->getId() != "")
+      $this->userAuthRepository->save($userAuth);
 
     return $this->userPasswordForm($request, $userAuth, $session, $errors);
   }
 
   private function userPasswordForm(
-    Request    $request,
-    UserAuth   $userAuth,
-    Session    $session,
-    array|null $errors = null
+    Request  $request,
+    UserAuth $userAuth,
+    Session  $session,
+    array    $errors = []
   ): Response {
     dump("user password");
     $form = $this->createFormBuilder()
@@ -118,7 +114,7 @@ class UserRegisterController extends AbstractController {
     $form->handleRequest($request);
     $data = $form->getData();
 
-    if ($errors == null && $form->isSubmitted() && $form->isValid()) {
+    if (count($errors) == 0 && $form->isSubmitted() && $form->isValid()) {
       if ($this->userRepository->findOneBy(["email" => $data["email"]]) != null) {
         return $this->render('register/index.html.twig', [
           "form"   => $form->createView(),
