@@ -1,0 +1,12 @@
+#!/bin/bash
+
+cd "$(dirname "$0")" || exit
+
+chmod +x ./stop
+./stop
+
+chmod +x ./sync
+./sync
+
+chmod +x ./start
+./start
