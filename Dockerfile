@@ -8,4 +8,4 @@ FROM bitnami/symfony
 #    && apt install -y git php8.1 composer npm
 
 WORKDIR /data
-#RUN composer install
+RUN apt install -y sendmail
