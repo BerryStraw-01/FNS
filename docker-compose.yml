@@ -55,6 +55,7 @@ services:
       - "sh"
       - "-c"
       - |-
+        sleep 10h
         which php
         composer update
         php bin/console doctrine:migrations:generate -n
