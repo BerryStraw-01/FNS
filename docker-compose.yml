@@ -10,10 +10,29 @@ services:
       SYMFONY_PROJECT_NAME: fns
     command:
       - "sh"
-      - "/data/run.sh"
+      - "-c"
+      - "git pull && composer update && symfony server:start"
     working_dir: /data
     ports:
       - 8000:8000
+    logging:
+      driver: json-file
+      options:
+        max-size: 1m
+        max-file: '3'
+    depends_on:
+      init-node:
+        condition: service_completed_successfully
+  init-node:
+    image: node
+    volumes:
+      - type: bind
+        source: ./
+        target: /app
+    command:
+      - "sh"
+      - "-c"
+      - "npm update && npm run build"
     logging:
       driver: json-file
       options:

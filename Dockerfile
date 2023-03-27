@@ -8,7 +8,4 @@ FROM bitnami/symfony
 #    && apt install -y git php8.1 composer npm
 
 WORKDIR /data
-RUN apt update \
-    && apt install -y npm \
-    && npm install \
-    && composer install
+#RUN composer install
