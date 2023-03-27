@@ -69,7 +69,7 @@ class UserRegisterController extends AbstractController {
 
     $userAuth = $this->userAuthRepository->findOneBy(["sessionId" => $session->getId(), "expected" => false]);
 
-    if ($userAuth == null) {
+    if ($userAuth == null || $userAuth->isExpected()) {
       return $this->newForm($request, $session);
     }
 
@@ -160,7 +160,8 @@ class UserRegisterController extends AbstractController {
     $this->userAuthRepository->save($userAuth);
 
     $email = (new Email())
-      ->from('wordpress@for-ns.littlestar.jp')
+      ->from('kigawa.8390@gmail.com')
+//      ->from('wordpress@for-ns.littlestar.jp')
       ->to($userAuth->getEmail())
       //->cc('cc@example.com')
       //->bcc('bcc@example.com')
@@ -168,7 +169,7 @@ class UserRegisterController extends AbstractController {
       //->priority(Email::PRIORITY_HIGH)
       ->subject('Time for Symfony Mailer!')
       ->text('Sending emails is fun again!')
-      ->html('<p>See Twig integration for better HTML integration!'.$userAuth->getCode().'</p>')
+      ->html('<p>'.$userAuth->getCode().'</p>')
     ;
 
     try {
