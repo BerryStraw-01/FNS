@@ -5,9 +5,9 @@ services:
     volumes:
       - type: bind
         source: ./
-        target: /data
+        target: /app
     environment:
-      TOKEN: ""
+      SYMFONY_PROJECT_NAME: fns
     command:
       - "sh"
       - "/data/run.sh"
