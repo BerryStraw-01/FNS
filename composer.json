@@ -105,6 +105,7 @@
     "symfony/maker-bundle": "^1.48"
   },
   "platform": {
-    "php": "^8.1"
+    "php": "^8.1",
+    "pdo_mysql": "^8.1"
   }
 }
