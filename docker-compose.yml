@@ -54,7 +54,7 @@ services:
     command:
       - "sh"
       - "-c"
-      - "composer update"
+      - "composer update && php bin/console make:migration -n && php bin/console doctrine:migrations:migrate -n"
     logging:
       driver: json-file
       options:
