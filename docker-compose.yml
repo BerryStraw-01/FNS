@@ -54,7 +54,7 @@ services:
     command:
       - "sh"
       - "-c"
-      - "composer update && php bin/console make:migration -n && php bin/console doctrine:migrations:migrate -n"
+      - "composer update && composer require symfony/maker-bundle --dev && php bin/console make:migration -n && php bin/console doctrine:migrations:migrate -n"
     logging:
       driver: json-file
       options:
