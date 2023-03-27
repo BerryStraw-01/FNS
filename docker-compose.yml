@@ -11,7 +11,7 @@ services:
     command:
       - "sh"
       - "-c"
-      - "git pull && composer update && symfony server:start"
+      - "symfony server:start"
     working_dir: /data
     ports:
       - 8000:8000
@@ -23,6 +23,9 @@ services:
     depends_on:
       init-node:
         condition: service_completed_successfully
+      init-composer:
+        condition: service_completed_successfully
+
   init-node:
     image: node
     volumes:
@@ -34,6 +37,47 @@ services:
       - "sh"
       - "-c"
       - "npm update && npm run build"
+    logging:
+      driver: json-file
+      options:
+        max-size: 1m
+        max-file: '3'
+    depends_on:
+      init-git:
+        condition: service_completed_successfully
+
+  init-composer:
+    image: composer
+    volumes:
+      - type: bind
+        source: ./
+        target: /app
+    working_dir: /app
+    command:
+      - "sh"
+      - "-c"
+      - "composer update"
+    logging:
+      driver: json-file
+      options:
+        max-size: 1m
+        max-file: '3'
+    depends_on:
+      init-git:
+        condition: service_completed_successfully
+
+
+  init-git:
+    image: bitnami/git
+    volumes:
+      - type: bind
+        source: ./
+        target: /app
+    working_dir: /app
+    command:
+      - "sh"
+      - "-c"
+      - "git pull"
     logging:
       driver: json-file
       options:
