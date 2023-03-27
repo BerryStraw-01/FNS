@@ -3,4 +3,4 @@
 
 cd "$(dirname "$0")" || exit
 
-git pull
+git pull -f
