@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints\Length;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 class User implements UserInterface, PasswordAuthenticatedUserInterface {
@@ -16,6 +17,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
   #[ORM\Column]
   private ?int $id = null;
   #[ORM\Column(length: 180, unique: true)]
+  #[Length(max: 180)]
   private string $email;
   #[ORM\Column]
   private array $roles = [];
@@ -28,12 +30,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
   #[ORM\Column]
   private ?string $username = null;
 
-  #[ORM\ManyToMany(targetEntity: Communitiy::class, mappedBy: 'users')]
+  #[ORM\ManyToMany(targetEntity: Community::class, mappedBy: 'users')]
   private Collection $communities;
 
-  protected function __construct()
-  {
-      $this->communities = new ArrayCollection();
+  protected function __construct() {
+    $this->communities = new ArrayCollection();
+  }
+
+  public static function fromUserAuth(UserAuth $userAuth): User {
+    return self::create($userAuth->getEmail(), $userAuth->getPassword());
   }
 
   public static function create(string $email, string $password): User {
@@ -41,15 +46,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
     $user->email = $email;
     $user->password = $password;
     return $user;
-  }
-
-  public static function fromUserAuth(UserAuth $userAuth): User {
-    return self::create($userAuth->getEmail(), $userAuth->getPassword());
-  }
-
-
-  public function getId(): ?int {
-    return $this->id;
   }
 
   public function getEmail(): ?string {
@@ -60,6 +56,23 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
     $this->email = $email;
 
     return $this;
+  }
+
+  /**
+   * @see PasswordAuthenticatedUserInterface
+   */
+  public function getPassword(): string {
+    return $this->password;
+  }
+
+  public function setPassword(string $password): self {
+    $this->password = $password;
+
+    return $this;
+  }
+
+  public function getId(): ?int {
+    return $this->id;
   }
 
   /**
@@ -97,19 +110,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
   }
 
   /**
-   * @see PasswordAuthenticatedUserInterface
-   */
-  public function getPassword(): string {
-    return $this->password;
-  }
-
-  public function setPassword(string $password): self {
-    $this->password = $password;
-
-    return $this;
-  }
-
-  /**
    * Returning a salt is only needed, if you are not using a modern
    * hashing algorithm (e.g. bcrypt or sodium) in your security.yaml.
    *
@@ -128,29 +128,26 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
   }
 
   /**
-   * @return Collection<int, Communitiy>
+   * @return Collection<int, Community>
    */
-  public function getCommunities(): Collection
-  {
-      return $this->communities;
+  public function getCommunities(): Collection {
+    return $this->communities;
   }
 
-  public function addCommunity(Communitiy $community): self
-  {
-      if (!$this->communities->contains($community)) {
-          $this->communities->add($community);
-          $community->addUser($this);
-      }
+  public function addCommunity(Community $community): self {
+    if (!$this->communities->contains($community)) {
+      $this->communities->add($community);
+      $community->addUser($this);
+    }
 
-      return $this;
+    return $this;
   }
 
-  public function removeCommunity(Communitiy $community): self
-  {
-      if ($this->communities->removeElement($community)) {
-          $community->removeUser($this);
-      }
+  public function removeCommunity(Community $community): self {
+    if ($this->communities->removeElement($community)) {
+      $community->removeUser($this);
+    }
 
-      return $this;
+    return $this;
   }
 }

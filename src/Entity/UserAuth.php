@@ -7,6 +7,7 @@ use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Validator\Constraints\Email;
+use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\Unique;
 
 #[ORM\Entity(repositoryClass: UserAuthRepository::class)]
@@ -16,6 +17,7 @@ class UserAuth implements PasswordAuthenticatedUserInterface {
   #[ORM\Column]
   private ?int $id = null;
   #[ORM\Column(length: 30, nullable: false)]
+  #[Length(max: 30)]
   #[Unique]
   private string $sessionId;
   #[ORM\Column(nullable: false)]

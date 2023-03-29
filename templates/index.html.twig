@@ -2,15 +2,6 @@
 
 {% block body %}
     <div>
-        {% if user is null %}
-            <a href="{{ path('app_register') }}">登録</a>
-            <a href="{{ path('app_login') }}">ログイン</a>
-        {% else %}
-            <p>{{ user.username }}</p>
-            <a href="{{ path('app_logout') }}">ログアウト</a>
-        {% endif %}
-    </div>
-    <div>
         <h1>FNS</h1>
         <p>topぺーーーーじ</p>
     </div>

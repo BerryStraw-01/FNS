@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Entity\UserAuth;
 use App\Form\Type\Auth\EmailCodeType;
+use App\Form\Type\TextType;
 use App\FormEntity\Auth\EmailCode;
 use App\Repository\UserAuthRepository;
 use App\Repository\UserRepository;
@@ -13,10 +14,8 @@ use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
@@ -25,13 +24,13 @@ use Symfony\Component\Mime\Email;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
+use function App\debug;
 
 class UserRegisterController extends AbstractController {
   private UserAuthRepository $userAuthRepository;
   private UserRepository $userRepository;
   private MailerInterface $mailer;
   private UserPasswordHasherInterface $userPasswordHasher;
-  private RequestStack $requestStack;
   private Security $security;
   private UserProviderInterface $userProvider;
 
@@ -39,7 +38,6 @@ class UserRegisterController extends AbstractController {
    * @param UserAuthRepository $userAuthRepository
    * @param UserPasswordHasherInterface $userPasswordHasher
    * @param MailerInterface $mailer
-   * @param RequestStack $requestStack
    * @param UserRepository $userRepository
    * @param Security $security
    * @param UserProviderInterface $userProvider
@@ -48,7 +46,6 @@ class UserRegisterController extends AbstractController {
     UserAuthRepository          $userAuthRepository,
     UserPasswordHasherInterface $userPasswordHasher,
     MailerInterface             $mailer,
-    RequestStack                $requestStack,
     UserRepository              $userRepository,
     Security                    $security,
     UserProviderInterface       $userProvider
@@ -56,7 +53,6 @@ class UserRegisterController extends AbstractController {
     $this->userAuthRepository = $userAuthRepository;
     $this->userPasswordHasher = $userPasswordHasher;
     $this->mailer = $mailer;
-    $this->requestStack = $requestStack;
     $this->userRepository = $userRepository;
     $this->security = $security;
     $this->userProvider = $userProvider;
@@ -64,12 +60,13 @@ class UserRegisterController extends AbstractController {
 
   #[Route('/register', name: 'app_register')]
   public function index(Request $request): Response {
+    debug();
     $session = $request->getSession();
     if (!$session->isStarted()) $session->start();
 
     $userAuth = $this->userAuthRepository->findOneBy(["sessionId" => $session->getId(), "expected" => false]);
 
-    if ($userAuth == null || $userAuth->isExpected()) {
+    if ($userAuth == null) {
       return $this->newForm($request, $session);
     }
 
@@ -90,6 +87,7 @@ class UserRegisterController extends AbstractController {
   }
 
   private function newForm(Request $request, Session $session, array $errors = []): Response {
+    debug();
     $userAuth = UserAuth::create($session->getId());
     $this->userAuthRepository->save($userAuth);
 
@@ -102,6 +100,7 @@ class UserRegisterController extends AbstractController {
     Session  $session,
     array    $errors = []
   ): Response {
+    debug();
     $form = $this->createFormBuilder()
       ->add("email", EmailType::class)
       ->add("password", PasswordType::class)
@@ -132,6 +131,7 @@ class UserRegisterController extends AbstractController {
   }
 
   private function emailCodeForm(Request $request, UserAuth $userAuth, Session $session): Response {
+    debug();
     $form = $this->createForm(EmailCodeType::class);
     $form->handleRequest($request);
 
@@ -185,6 +185,7 @@ class UserRegisterController extends AbstractController {
   }
 
   private function createUser(Request $request, UserAuth $userAuth): Response {
+    debug();
     $user = $this->userRepository->findOneBy(["email" => $userAuth->getEmail()]);
     if ($user == null) $user = User::create($userAuth->getEmail(), $userAuth->getPassword());
 
@@ -200,6 +201,8 @@ class UserRegisterController extends AbstractController {
       if ($this->userRepository->findOneByNotEmailAndUsername($user->getEmail(), $data["username"]) != null) {
         return $this->indexRender($form, [$data["username"]."はすでに使用されています。"]);
       }
+      $userAuth->setExpected(true);
+      $this->userAuthRepository->save($userAuth);
 
       $user->setUsername($data["username"]);
 

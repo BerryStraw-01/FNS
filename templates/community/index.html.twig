@@ -1,0 +1,10 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+    <a href="{{ path('app_community_create') }}">作成</a>
+    {% for community in communities %}
+        <div>
+            <h3>{{ community.name }}</h3>
+            <p>{{ community.description }}</p>
+        </div>
+    {% endfor %}
+{% endblock %}

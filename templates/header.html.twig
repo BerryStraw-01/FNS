@@ -1,3 +1,14 @@
-<div>
+<div class="header">
     <a href="{{ path('app_top') }}">Top</a>
+    <a href="{{ path('app_community') }}">Community</a>
+
+    <div>
+        {% if app.user is null %}
+            <a href="{{ path('app_register') }}">登録</a>
+            <a href="{{ path('app_login') }}">ログイン</a>
+        {% else %}
+            <p>{{ app.user.username }}</p>
+            <a href="{{ path('app_logout') }}">ログアウト</a>
+        {% endif %}
+    </div>
 </div>
