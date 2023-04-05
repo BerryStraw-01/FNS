@@ -87,3 +87,9 @@ symfony server:start
 * access http://127.0.0.1:8000
 
 https://127.0.0.1:8000 を開く
+
+## rest api
+
+* get /global
+* get /user/{name}
+* get /community/{name}
