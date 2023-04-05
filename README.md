@@ -91,5 +91,7 @@ https://127.0.0.1:8000 を開く
 ## rest api
 
 * get /global
-* get /user/{name}
-* get /community/{name}
+* get /user/profile/{name}
+* get /community/profile/{name}
+
+* post /
