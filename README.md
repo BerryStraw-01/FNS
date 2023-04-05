@@ -69,3 +69,5 @@ serverタスクを実行する
 * access http://127.0.0.1:8000
 
 https://127.0.0.1:8000 を開く
+
+## Rest API

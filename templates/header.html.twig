@@ -7,7 +7,8 @@
             <a href="{{ path('app_register') }}">登録</a>
             <a href="{{ path('app_login') }}">ログイン</a>
         {% else %}
-            <p>{{ app.user.username }}</p>
+            <a href="{{ path('app_post') }}">投稿</a>
+            <a href="{{ path('app_user_page',{"username": app.user.username}) }}">{{ app.user.username }}</a>
             <a href="{{ path('app_logout') }}">ログアウト</a>
         {% endif %}
     </div>

@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Post\Post;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -9,6 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\Unique;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 class User implements UserInterface, PasswordAuthenticatedUserInterface {
@@ -28,13 +30,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
   #[ORM\Column]
   private string $password;
   #[ORM\Column]
+  #[Unique]
   private ?string $username = null;
 
   #[ORM\ManyToMany(targetEntity: Community::class, mappedBy: 'users')]
   private Collection $communities;
 
+  #[ORM\OneToMany(mappedBy: 'user', targetEntity: Post::class)]
+  private Collection $userPosts;
+
   protected function __construct() {
     $this->communities = new ArrayCollection();
+    $this->userPosts = new ArrayCollection();
   }
 
   public static function fromUserAuth(UserAuth $userAuth): User {
@@ -146,6 +153,33 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
   public function removeCommunity(Community $community): self {
     if ($this->communities->removeElement($community)) {
       $community->removeUser($this);
+    }
+
+    return $this;
+  }
+
+  /**
+   * @return Collection<int, Post>
+   */
+  public function getUserPosts(): Collection {
+    return $this->userPosts;
+  }
+
+  public function addUserPost(Post $userPost): self {
+    if (!$this->userPosts->contains($userPost)) {
+      $this->userPosts->add($userPost);
+      $userPost->setUser($this);
+    }
+
+    return $this;
+  }
+
+  public function removeUserPost(Post $userPost): self {
+    if ($this->userPosts->removeElement($userPost)) {
+      // set the owning side to null (unless already changed)
+      if ($userPost->getUser() === $this) {
+        $userPost->setUser(null);
+      }
     }
 
     return $this;

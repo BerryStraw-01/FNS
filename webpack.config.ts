@@ -5,11 +5,12 @@ import WebpackRemoveEmptyScriptsPlugin from "webpack-remove-empty-scripts";
 module.exports = {
     // 入力ファイル設定
     entry: {
-        index: './src-ts/index.ts',
+        index: './src-ts/index.tsx',
         style: './src-css/style.scss',
     },
-    devtool: 'source-map',
-    mode: 'development',
+    // devtool: 'source-map',
+    // mode: 'development',
+    mode: "production",
     cache: true,
     module: {
         rules: [
@@ -35,6 +36,7 @@ module.exports = {
         minimizer: [
             new CssMinimizerPlugin(),
         ],
+        minimize: true
     },
 
     // モジュール設定

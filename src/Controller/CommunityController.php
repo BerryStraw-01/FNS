@@ -44,7 +44,7 @@ class CommunityController extends AbstractController {
 
     if ($form->isSubmitted() && $form->isValid()) {
       if ($this->communityRepository->findOneBy(["name" => $community->getName()]) != null)
-        return $this->render("community/create/index.html.twig", [
+        return $this->render("community/create/create.html.twig", [
           "form"   => $form->createView(),
           "errors" => ["'".$community->getName()."'はすでに使用されています"]
         ]);
@@ -57,7 +57,7 @@ class CommunityController extends AbstractController {
       $this->communityRepository->save($community);
     }
 
-    return $this->render('community/create/index.html.twig', [
+    return $this->render('community/create/create.html.twig', [
       'form' => $form->createView(),
     ]);
   }
